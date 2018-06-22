@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.annotation.WebServlet;
-import java.text.DecimalFormat;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -26,12 +25,16 @@ public class EmployeeGui extends UI {
 
     private static final Logger log = LoggerFactory.getLogger(EmployeeGui.class);
 
-    @Autowired
-    private EmplyeeRepository repository;
+    private final EmplyeeRepository repository;
 
     private List<Employee> employees;
 
     private final Grid<Employee> employeeGrid = new Grid<>();
+
+    @Autowired
+    public EmployeeGui(EmplyeeRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     protected void init(VaadinRequest vaadinRequest) {
@@ -77,42 +80,14 @@ public class EmployeeGui extends UI {
     }
 
     private void editEmployee(Employee e) {
-        Window window = new Window();
-        window.setWidth(300.0f, Unit.PIXELS);
-        final FormLayout content = new FormLayout();
-        content.setMargin(true);
-        final TextField firstNameTf = new TextField();
-        firstNameTf.setCaption("First name:");
-        firstNameTf.setValue(e.getFirstName());
-        final TextField lastNameTf = new TextField();
-        lastNameTf.setCaption("Last name:");
-        lastNameTf.setValue(e.getLastName());
-        Button saveBtn = new Button("Save", event -> {
-            log.info("Save edit: {}", e);
-            e.setFirstName(firstNameTf.getValue());
-            e.setLastName(lastNameTf.getValue());
-            DecimalFormat decimalFormat = new DecimalFormat();
-            decimalFormat.setParseBigDecimal(true);
-            repository.save(e);
-            refreshGrid();
-            window.close();
-        });
-        Button cancelBtn = new Button("Cancel", event -> {
-            log.info("Cancel edit: {}", e);
-            window.close();
-        });
-        final HorizontalLayout buttonLayout = new HorizontalLayout(
-                cancelBtn,
-                saveBtn
-        );
-        content.addComponent(firstNameTf);
-        content.addComponent(lastNameTf);
-        content.addComponent(buttonLayout);
-        window.setContent(content);
-        window.setModal(true);
-        window.setClosable(false);
-        window.setResizable(false);
-        this.addWindow(window);
+        new EmployeeEditor(e,
+                (employeeToSave, editor) -> {
+                    log.info("Save edit: {}", e);
+                    repository.save(e);
+                    refreshGrid();
+                },
+                (employeeCanceled, editor) -> log.info("Cancel edit: {}", employeeCanceled)
+        ).show();
     }
 
     private Button deleteButton(Employee e) {
@@ -123,27 +98,14 @@ public class EmployeeGui extends UI {
     }
 
     private void deleteEmployee(Employee e) {
-        Window window = new Window("Are you sure?");
-        //window.setWidth(300.0f, Unit.PIXELS);
-        final HorizontalLayout content = new HorizontalLayout();
-        content.setMargin(true);
-        Button yesBtn = new Button("Yes", event -> {
-            log.info("Delete: {}", e);
-            repository.delete(e);
-            refreshGrid();
-            window.close();
-        });
-        Button noBtn = new Button("No", event -> {
-            log.info("NO delete: {}", e);
-            window.close();
-        });
-        content.addComponent(noBtn);
-        content.addComponent(yesBtn);
-        window.setContent(content);
-        window.setModal(true);
-        window.setClosable(false);
-        window.setResizable(false);
-        this.addWindow(window);
+        new YesNoWindow("Are you sure?",
+                event -> {
+                    log.info("Delete: {}", e);
+                    repository.delete(e);
+                    refreshGrid();
+                },
+                event -> log.info("NO delete: {}", e)
+        ).show();
     }
 
     private void refreshGrid() {
