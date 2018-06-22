@@ -10,13 +10,11 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-import io.vavr.control.Try;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.annotation.WebServlet;
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,8 +44,7 @@ public class EmployeeGui extends UI {
         addBtn.addClickListener(e -> {
             Employee employee = new Employee(
                     "",
-                    "",
-                    BigDecimal.ZERO
+                    ""
             );
             editEmployee(employee);
         });
@@ -60,7 +57,6 @@ public class EmployeeGui extends UI {
         employeeGrid.addColumn(employee -> employees.indexOf(employee) + 1).setExpandRatio(0);
         employeeGrid.addColumn(Employee::getFirstName).setCaption("First name").setExpandRatio(1);
         employeeGrid.addColumn(Employee::getLastName).setCaption("Last name").setExpandRatio(2);
-        employeeGrid.addColumn(Employee::getSalary).setCaption("Salary").setExpandRatio(1);
         employeeGrid.addComponentColumn(this::editButton).setExpandRatio(0);
         employeeGrid.addComponentColumn(this::deleteButton).setExpandRatio(0);
         employeeGrid.setFrozenColumnCount(1);
@@ -91,17 +87,12 @@ public class EmployeeGui extends UI {
         final TextField lastNameTf = new TextField();
         lastNameTf.setCaption("Last name:");
         lastNameTf.setValue(e.getLastName());
-        final TextField salaryTf = new TextField();
-        salaryTf.setCaption("Salary:");
-        salaryTf.setValue(String.valueOf(e.getSalary()));
         Button saveBtn = new Button("Save", event -> {
             log.info("Save edit: {}", e);
             e.setFirstName(firstNameTf.getValue());
             e.setLastName(lastNameTf.getValue());
             DecimalFormat decimalFormat = new DecimalFormat();
             decimalFormat.setParseBigDecimal(true);
-            BigDecimal salary = Try.of(() -> (BigDecimal) decimalFormat.parse(salaryTf.getValue())).getOrElse(BigDecimal.ZERO);
-            e.setSalary(salary);
             repository.save(e);
             refreshGrid();
             window.close();
@@ -116,7 +107,6 @@ public class EmployeeGui extends UI {
         );
         content.addComponent(firstNameTf);
         content.addComponent(lastNameTf);
-        content.addComponent(salaryTf);
         content.addComponent(buttonLayout);
         window.setContent(content);
         window.setModal(true);

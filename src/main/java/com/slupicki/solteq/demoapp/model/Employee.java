@@ -2,8 +2,10 @@ package com.slupicki.solteq.demoapp.model;
 
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
-import java.math.BigDecimal;
+import javax.persistence.OneToMany;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -14,15 +16,17 @@ public class Employee {
 
     private String firstName;
     private String lastName;
-    private BigDecimal salary;
+    @OneToMany(fetch = FetchType.EAGER)
+    private Set<Salary> salaries;
+    @OneToMany(fetch = FetchType.EAGER)
+    private Set<ContactInfo> contactInfos;
 
     public Employee() {
     }
 
-    public Employee(String firstName, String lastName, BigDecimal salary) {
+    public Employee(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.salary = salary;
     }
 
     public UUID getId() {
@@ -45,12 +49,20 @@ public class Employee {
         this.lastName = lastName;
     }
 
-    public BigDecimal getSalary() {
-        return salary;
+    public Set<Salary> getSalaries() {
+        return salaries;
     }
 
-    public void setSalary(BigDecimal salary) {
-        this.salary = salary;
+    public void setSalaries(Set<Salary> salaries) {
+        this.salaries = salaries;
+    }
+
+    public Set<ContactInfo> getContactInfos() {
+        return contactInfos;
+    }
+
+    public void setContactInfos(Set<ContactInfo> contactInfos) {
+        this.contactInfos = contactInfos;
     }
 
     @Override
@@ -59,7 +71,8 @@ public class Employee {
         sb.append("id=").append(id);
         sb.append(", firstName='").append(firstName).append('\'');
         sb.append(", lastName='").append(lastName).append('\'');
-        sb.append(", salary=").append(salary);
+        sb.append(", salaries=").append(salaries);
+        sb.append(", contactInfos=").append(contactInfos);
         sb.append('}');
         return sb.toString();
     }
