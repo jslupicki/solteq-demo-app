@@ -1,11 +1,20 @@
 package com.slupicki.solteq.demoapp.gui;
 
+import com.slupicki.solteq.demoapp.common.Util;
+import com.slupicki.solteq.demoapp.model.ContactInfo;
 import com.slupicki.solteq.demoapp.model.Employee;
+import com.slupicki.solteq.demoapp.model.Salary;
 import com.vaadin.ui.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.function.BiConsumer;
 
 public class EmployeeEditor extends Window {
+
+    private static final Logger log = LoggerFactory.getLogger(EmployeeEditor.class);
 
     public EmployeeEditor(
             Employee employee,
@@ -35,15 +44,79 @@ public class EmployeeEditor extends Window {
             BiConsumer<Employee, EmployeeEditor> saveListener,
             BiConsumer<Employee, EmployeeEditor> cancelListener
     ) {
-        setWidth(300.0f, Unit.PIXELS);
-        final FormLayout content = new FormLayout();
+        setWidth(80, Unit.EM);
+
+        final VerticalLayout content = new VerticalLayout();
         content.setMargin(true);
+
         final TextField firstNameTf = new TextField();
         firstNameTf.setCaption("First name:");
         firstNameTf.setValue(employee.getFirstName());
         final TextField lastNameTf = new TextField();
         lastNameTf.setCaption("Last name:");
         lastNameTf.setValue(employee.getLastName());
+        final FormLayout formLayout = new FormLayout(
+                firstNameTf,
+                lastNameTf
+        );
+
+        final HorizontalLayout gridLayout = new HorizontalLayout();
+
+        final VerticalLayout salaryLayout = new VerticalLayout();
+        final Grid<Salary> salaryGrid = new Grid<>();
+        salaryGrid.addColumn(salary -> employee.getSortedSalaries().indexOf(salary) + 1).setExpandRatio(0);
+        salaryGrid.addColumn(Salary::getAmount).setCaption("Amount").setExpandRatio(1);
+        salaryGrid.addColumn(Salary::getFromDate).setCaption("From date").setExpandRatio(2);
+        salaryGrid.setFrozenColumnCount(1);
+        Util.refreshGrid(salaryGrid, employee.getSortedSalaries());
+
+        final HorizontalLayout salariesCaption = Util.captionAndAddButton("Salaries", event -> {
+            Salary salary = new Salary(BigDecimal.ZERO, LocalDate.now());
+            new SalaryEditor(
+                    salary,
+                    (editedSalary, salaryEditor) -> {
+                        log.info("Save edited salary: {}", editedSalary);
+                        employee.addSalary(editedSalary);
+                        Util.refreshGrid(salaryGrid, employee.getSortedSalaries());
+                    },
+                    (editedSalary, salaryEditor) -> log.info("Cancel add salary: {}", editedSalary)
+            ).show();
+        });
+        salaryLayout.addComponentsAndExpand(
+                salariesCaption,
+                salaryGrid
+        );
+
+        final VerticalLayout contactInfoLayout = new VerticalLayout();
+        final Grid<ContactInfo> contactInfoGrid = new Grid<>();
+        contactInfoGrid.addColumn(contactInfo -> employee.getSortedContactInfos().indexOf(contactInfo) + 1).setExpandRatio(0);
+        contactInfoGrid.addColumn(ContactInfo::getPhone).setCaption("Phone").setExpandRatio(1);
+        contactInfoGrid.addColumn(ContactInfo::getFromDate).setCaption("From date").setExpandRatio(2);
+        contactInfoGrid.setFrozenColumnCount(1);
+        Util.refreshGrid(contactInfoGrid, employee.getSortedContactInfos());
+
+        final HorizontalLayout contactInfoCaption = Util.captionAndAddButton("Contact info", event -> {
+            ContactInfo contactInfo = new ContactInfo(LocalDate.now(), "");
+            new ContactInfoEditor(
+                    contactInfo,
+                    (editedContactInfo, contactInfoEditor) -> {
+                        log.info("Save edited contact info: {}", editedContactInfo);
+                        employee.addContactInfo(contactInfo);
+                        Util.refreshGrid(contactInfoGrid, employee.getSortedContactInfos());
+                    },
+                    (editedContactInfo, contactInfoEditor) -> log.info("Cancel add salary: {}", editedContactInfo)
+            ).show();
+        });
+        contactInfoLayout.addComponentsAndExpand(
+                contactInfoCaption,
+                contactInfoGrid
+        );
+
+        gridLayout.addComponentsAndExpand(
+                salaryLayout,
+                contactInfoLayout
+        );
+
         Button saveBtn = new Button("Save", event -> {
             employee.setFirstName(firstNameTf.getValue());
             employee.setLastName(lastNameTf.getValue());
@@ -58,9 +131,11 @@ public class EmployeeEditor extends Window {
                 cancelBtn,
                 saveBtn
         );
-        content.addComponent(firstNameTf);
-        content.addComponent(lastNameTf);
+
+        content.addComponent(formLayout);
+        content.addComponent(gridLayout);
         content.addComponent(buttonLayout);
+
         setContent(content);
         setModal(true);
         setClosable(false);
