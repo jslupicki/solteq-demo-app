@@ -4,28 +4,20 @@ import com.slupicki.solteq.demoapp.common.Util;
 import com.slupicki.solteq.demoapp.dao.EmplyeeRepository;
 import com.slupicki.solteq.demoapp.model.Employee;
 import com.slupicki.solteq.demoapp.model.Salary;
-import com.vaadin.annotations.Push;
-import com.vaadin.annotations.VaadinServletConfiguration;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinServlet;
-import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import javax.servlet.annotation.WebServlet;
 import java.math.BigDecimal;
 import java.util.List;
 
-@SpringUI
-@Push
-public class EmployeeGui extends UI {
+@Component
+public class EmployeesTab extends VerticalLayout {
 
-    private static final Logger log = LoggerFactory.getLogger(EmployeeGui.class);
+    private static final Logger log = LoggerFactory.getLogger(EmployeesTab.class);
 
     private final EmplyeeRepository repository;
 
@@ -33,16 +25,10 @@ public class EmployeeGui extends UI {
 
     private final Grid<Employee> employeeGrid = new Grid<>();
 
-    @Autowired
-    public EmployeeGui(EmplyeeRepository repository) {
+    public EmployeesTab(EmplyeeRepository repository) {
+        super();
         this.repository = repository;
-    }
-
-    @Override
-    protected void init(VaadinRequest vaadinRequest) {
         employees = Util.iterableToList(repository.findAll());
-
-        final VerticalLayout layout = new VerticalLayout();
 
         final HorizontalLayout gridCaptionLayout = Util.captionAndAddButton("Employees", e -> {
             Employee employee = new Employee(
@@ -64,12 +50,14 @@ public class EmployeeGui extends UI {
         employeeGrid.addComponentColumn(employee -> Util.deleteButton(event -> deleteEmployee(employee))).setExpandRatio(0);
         employeeGrid.setFrozenColumnCount(1);
 
-        layout.addComponent(gridCaptionLayout);
-        layout.addComponent(employeeGrid);
-
-        setContent(layout);
-
         refreshGrid(employeeGrid);
+
+        addComponent(gridCaptionLayout);
+        addComponent(employeeGrid);
+    }
+
+    public void refresh() {
+        refreshGrid();
     }
 
     private void editEmployee(Employee e) {
@@ -101,10 +89,5 @@ public class EmployeeGui extends UI {
     private void refreshGrid(Grid<Employee> grid) {
         employees = Util.iterableToList(repository.findAll());
         Util.refreshGrid(grid, employees);
-    }
-
-    @WebServlet(urlPatterns = "/*", name = "EmpleyeeGUIServlet", asyncSupported = true)
-    @VaadinServletConfiguration(ui = EmployeeGui.class, productionMode = false)
-    public static class EmpleyeeGUIServlet extends VaadinServlet {
     }
 }

@@ -1,6 +1,7 @@
 package com.slupicki.solteq.demoapp.model;
 
 
+import com.google.common.collect.Sets;
 import io.vavr.Lazy;
 import io.vavr.control.Option;
 
@@ -21,9 +22,9 @@ public class Employee {
     private String firstName;
     private String lastName;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<Salary> salaries;
+    private Set<Salary> salaries = Sets.newHashSet();
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Set<ContactInfo> contactInfos;
+    private Set<ContactInfo> contactInfos = Sets.newHashSet();
 
     @Transient
     private Lazy<Option<Salary>> latestSalary = Lazy.of(() ->
