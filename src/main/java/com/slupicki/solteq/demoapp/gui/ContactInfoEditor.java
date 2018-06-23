@@ -39,7 +39,7 @@ public class ContactInfoEditor extends Window {
             BiConsumer<ContactInfo, ContactInfoEditor> saveListener,
             BiConsumer<ContactInfo, ContactInfoEditor> cancelListener
     ) {
-        setWidth(300.0f, Unit.PIXELS);
+        setWidth(20, Unit.EM);
         final FormLayout content = new FormLayout();
         content.setMargin(true);
         final TextField phoneTf = new TextField();

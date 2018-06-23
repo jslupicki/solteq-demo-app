@@ -42,7 +42,7 @@ public class SalaryEditor extends Window {
             BiConsumer<Salary, SalaryEditor> saveListener,
             BiConsumer<Salary, SalaryEditor> cancelListener
     ) {
-        setWidth(300.0f, Unit.PIXELS);
+        setWidth(20, Unit.EM);
         final FormLayout content = new FormLayout();
         content.setMargin(true);
         final TextField amountTf = new TextField();

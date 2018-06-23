@@ -67,20 +67,14 @@ public class EmployeeEditor extends Window {
         salaryGrid.addColumn(salary -> employee.getSortedSalaries().indexOf(salary) + 1).setExpandRatio(0);
         salaryGrid.addColumn(Salary::getAmount).setCaption("Amount").setExpandRatio(1);
         salaryGrid.addColumn(Salary::getFromDate).setCaption("From date").setExpandRatio(2);
+        salaryGrid.addComponentColumn(salary -> Util.editButton(event -> editSalary(salary, employee, salaryGrid))).setExpandRatio(0);
+        salaryGrid.addComponentColumn(salary -> Util.deleteButton(event -> deleteSalary(salary, employee, salaryGrid))).setExpandRatio(0);
         salaryGrid.setFrozenColumnCount(1);
         Util.refreshGrid(salaryGrid, employee.getSortedSalaries());
 
         final HorizontalLayout salariesCaption = Util.captionAndAddButton("Salaries", event -> {
             Salary salary = new Salary(BigDecimal.ZERO, LocalDate.now());
-            new SalaryEditor(
-                    salary,
-                    (editedSalary, salaryEditor) -> {
-                        log.info("Save edited salary: {}", editedSalary);
-                        employee.addSalary(editedSalary);
-                        Util.refreshGrid(salaryGrid, employee.getSortedSalaries());
-                    },
-                    (editedSalary, salaryEditor) -> log.info("Cancel add salary: {}", editedSalary)
-            ).show();
+            editSalary(salary, employee, salaryGrid);
         });
         salaryLayout.addComponentsAndExpand(
                 salariesCaption,
@@ -92,20 +86,14 @@ public class EmployeeEditor extends Window {
         contactInfoGrid.addColumn(contactInfo -> employee.getSortedContactInfos().indexOf(contactInfo) + 1).setExpandRatio(0);
         contactInfoGrid.addColumn(ContactInfo::getPhone).setCaption("Phone").setExpandRatio(1);
         contactInfoGrid.addColumn(ContactInfo::getFromDate).setCaption("From date").setExpandRatio(2);
+        contactInfoGrid.addComponentColumn(contactInfo -> Util.editButton(event -> editContactInfo(contactInfo, employee, contactInfoGrid))).setExpandRatio(0);
+        contactInfoGrid.addComponentColumn(contactInfo -> Util.deleteButton(event -> deleteContactInfo(contactInfo, employee, contactInfoGrid))).setExpandRatio(0);
         contactInfoGrid.setFrozenColumnCount(1);
         Util.refreshGrid(contactInfoGrid, employee.getSortedContactInfos());
 
         final HorizontalLayout contactInfoCaption = Util.captionAndAddButton("Contact info", event -> {
             ContactInfo contactInfo = new ContactInfo(LocalDate.now(), "");
-            new ContactInfoEditor(
-                    contactInfo,
-                    (editedContactInfo, contactInfoEditor) -> {
-                        log.info("Save edited contact info: {}", editedContactInfo);
-                        employee.addContactInfo(contactInfo);
-                        Util.refreshGrid(contactInfoGrid, employee.getSortedContactInfos());
-                    },
-                    (editedContactInfo, contactInfoEditor) -> log.info("Cancel add salary: {}", editedContactInfo)
-            ).show();
+            editContactInfo(contactInfo, employee, contactInfoGrid);
         });
         contactInfoLayout.addComponentsAndExpand(
                 contactInfoCaption,
@@ -140,5 +128,51 @@ public class EmployeeEditor extends Window {
         setModal(true);
         setClosable(false);
         setResizable(false);
+    }
+
+    private void deleteContactInfo(ContactInfo contactInfo, Employee employee, Grid<ContactInfo> contactInfoGrid) {
+        new YesNoWindow("Are you sure?",
+                event -> {
+                    log.info("Delete contact info: {}", contactInfo);
+                    employee.getContactInfos().remove(contactInfo);
+                    Util.refreshGrid(contactInfoGrid, employee.getSortedContactInfos());
+                },
+                event -> log.info("NO delete contact info: {}", contactInfo)
+        ).show();
+    }
+
+    private void editContactInfo(ContactInfo contactInfo, Employee employee, Grid<ContactInfo> contactInfoGrid) {
+        new ContactInfoEditor(
+                contactInfo,
+                (editedContactInfo, contactInfoEditor) -> {
+                    log.info("Save edited contact info: {}", editedContactInfo);
+                    employee.addContactInfo(contactInfo);
+                    Util.refreshGrid(contactInfoGrid, employee.getSortedContactInfos());
+                },
+                (editedContactInfo, contactInfoEditor) -> log.info("Cancel add salary: {}", editedContactInfo)
+        ).show();
+    }
+
+    private void deleteSalary(Salary salary, Employee employee, Grid<Salary> salaryGrid) {
+        new YesNoWindow("Are you sure?",
+                event -> {
+                    log.info("Delete salary: {}", salary);
+                    employee.getSalaries().remove(salary);
+                    Util.refreshGrid(salaryGrid, employee.getSortedSalaries());
+                },
+                event -> log.info("NO delete salary: {}", salary)
+        ).show();
+    }
+
+    private void editSalary(Salary salary, Employee employee, Grid<Salary> salaryGrid) {
+        new SalaryEditor(
+                salary,
+                (editedSalary, salaryEditor) -> {
+                    log.info("Save edited salary: {}", editedSalary);
+                    employee.addSalary(editedSalary);
+                    Util.refreshGrid(salaryGrid, employee.getSortedSalaries());
+                },
+                (editedSalary, salaryEditor) -> log.info("Cancel add salary: {}", editedSalary)
+        ).show();
     }
 }

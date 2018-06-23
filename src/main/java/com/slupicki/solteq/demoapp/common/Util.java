@@ -1,9 +1,11 @@
 package com.slupicki.solteq.demoapp.common;
 
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.themes.ValoTheme;
 
 import java.util.Collection;
 import java.util.List;
@@ -31,4 +33,19 @@ public interface Util {
         );
         return horizontalLayout;
     }
+
+    static Button editButton(Button.ClickListener clickListener) {
+        Button button = new Button(VaadinIcons.EDIT);
+        button.addStyleName(ValoTheme.BUTTON_SMALL);
+        button.addClickListener(clickListener);
+        return button;
+    }
+
+    static Button deleteButton(Button.ClickListener clickListener) {
+        Button button = new Button(VaadinIcons.DEL);
+        button.addStyleName(ValoTheme.BUTTON_SMALL);
+        button.addClickListener(clickListener);
+        return button;
+    }
+
 }

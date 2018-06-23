@@ -6,12 +6,13 @@ import com.slupicki.solteq.demoapp.model.Employee;
 import com.slupicki.solteq.demoapp.model.Salary;
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.VaadinServletConfiguration;
-import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.spring.annotation.SpringUI;
-import com.vaadin.ui.*;
-import com.vaadin.ui.themes.ValoTheme;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,8 +60,8 @@ public class EmployeeGui extends UI {
                         .map(Salary::getAmount)
                         .getOrElse(BigDecimal.ZERO)
         ).setCaption("Salary").setExpandRatio(2);
-        employeeGrid.addComponentColumn(this::editButton).setExpandRatio(0);
-        employeeGrid.addComponentColumn(this::deleteButton).setExpandRatio(0);
+        employeeGrid.addComponentColumn(employee -> Util.editButton(event -> editEmployee(employee))).setExpandRatio(0);
+        employeeGrid.addComponentColumn(employee -> Util.deleteButton(event -> deleteEmployee(employee))).setExpandRatio(0);
         employeeGrid.setFrozenColumnCount(1);
 
         layout.addComponent(gridCaptionLayout);
@@ -69,13 +70,6 @@ public class EmployeeGui extends UI {
         setContent(layout);
 
         refreshGrid(employeeGrid);
-    }
-
-    private Button editButton(Employee e) {
-        Button button = new Button(VaadinIcons.EDIT);
-        button.addStyleName(ValoTheme.BUTTON_SMALL);
-        button.addClickListener(event -> editEmployee(e));
-        return button;
     }
 
     private void editEmployee(Employee e) {
@@ -87,13 +81,6 @@ public class EmployeeGui extends UI {
                 },
                 (employeeCanceled, editor) -> log.info("Cancel edit: {}", employeeCanceled)
         ).show();
-    }
-
-    private Button deleteButton(Employee e) {
-        Button button = new Button(VaadinIcons.DEL);
-        button.addStyleName(ValoTheme.BUTTON_SMALL);
-        button.addClickListener(event -> deleteEmployee(e));
-        return button;
     }
 
     private void deleteEmployee(Employee e) {
