@@ -23,8 +23,8 @@ public class SalariesPerMonthChart extends AbstractJavaScriptComponent {
     }
 
     @Override
-    protected SalariesPerMontChartState getState() {
-        return (SalariesPerMontChartState) super.getState();
+    protected SalariesPerMonthChartState getState() {
+        return (SalariesPerMonthChartState) super.getState();
     }
 
 

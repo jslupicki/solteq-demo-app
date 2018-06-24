@@ -5,7 +5,7 @@ import com.vaadin.shared.ui.JavaScriptComponentState;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SalariesPerMontChartState extends JavaScriptComponentState {
+public class SalariesPerMonthChartState extends JavaScriptComponentState {
     public String title;
     public String subTitle;
     public List<String> headers = new ArrayList<>();
