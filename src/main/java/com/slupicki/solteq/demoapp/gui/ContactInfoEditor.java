@@ -52,6 +52,7 @@ public class ContactInfoEditor extends Window {
         Button saveBtn = new Button("Save", event -> {
             contactInfo.setPhone(phoneTf.getValue());
             contactInfo.setFromDate(fromDateDf.getValue());
+            contactInfo.updateSearchString();
             saveListener.accept(contactInfo, this);
             close();
         });

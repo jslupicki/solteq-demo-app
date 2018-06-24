@@ -1,14 +1,19 @@
 package com.slupicki.solteq.demoapp.model;
 
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
-import io.vavr.Lazy;
 import io.vavr.control.Option;
+import io.vavr.control.Try;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.slupicki.solteq.demoapp.common.Constants.SEARCH_STRING_LENGTH;
 
 @Entity
 public class Employee {
@@ -26,20 +31,8 @@ public class Employee {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<ContactInfo> contactInfos = Sets.newHashSet();
 
-    @Transient
-    private Lazy<Option<Salary>> latestSalary = Lazy.of(() ->
-            Option.ofOptional(salaries.stream()
-                    .filter(salary -> LocalDate.now().isAfter(salary.getFromDate())) // Only salaries from past
-                    .sorted(fromLatestSalary)
-                    .findFirst())
-    );
-    @Transient
-    private Lazy<Option<ContactInfo>> latestContactInfo = Lazy.of(() ->
-            Option.ofOptional(contactInfos.stream()
-                    .filter(contactInfo -> LocalDate.now().isAfter(contactInfo.getFromDate())) // Only contact info from past
-                    .sorted(fromLatestContactInfo)
-                    .findFirst())
-    );
+    @Column(length = SEARCH_STRING_LENGTH)
+    private String searchString;
 
     public Employee() {
     }
@@ -86,7 +79,7 @@ public class Employee {
     }
 
     public Option<Salary> getLatestSalary() {
-        return latestSalary.get();
+        return Try.of(() -> getSortedSalaries().get(0)).toOption();
     }
 
     public void addSalary(Salary salary) {
@@ -100,7 +93,7 @@ public class Employee {
     }
 
     public Option<ContactInfo> getLatestContactInfo() {
-        return latestContactInfo.get();
+        return Try.of(() -> getSortedContactInfos().get(0)).toOption();
     }
 
     public void addContactInfo(ContactInfo contactInfo) {
@@ -113,15 +106,37 @@ public class Employee {
         return contactInfos.stream().sorted(fromLatestContactInfo).collect(Collectors.toList());
     }
 
+    public String getSearchString() {
+        return searchString;
+    }
+
+    public void setSearchString(String searchString) {
+        this.searchString = searchString;
+    }
+
+    @PreUpdate
+    @PrePersist
+    public void updateSearchString() {
+        for (Salary salary : salaries) {
+            salary.updateSearchString();
+        }
+        for (ContactInfo contactInfo : contactInfos) {
+            contactInfo.updateSearchString();
+        }
+        final String fullSearchString = StringUtils.join(
+                ImmutableList.of(
+                        firstName,
+                        lastName,
+                        Try.of(() -> getLatestSalary().get().getSearchString()).getOrElse(""),
+                        Try.of(() -> getLatestContactInfo().get().getSearchString()).getOrElse("")
+                ),
+                " "
+        );
+        searchString = StringUtils.substring(fullSearchString, 0, SEARCH_STRING_LENGTH - 1);
+    }
+
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Employee{");
-        sb.append("id=").append(id);
-        sb.append(", firstName='").append(firstName).append('\'');
-        sb.append(", lastName='").append(lastName).append('\'');
-        sb.append(", salaries=").append(salaries);
-        sb.append(", contactInfos=").append(contactInfos);
-        sb.append('}');
-        return sb.toString();
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 }

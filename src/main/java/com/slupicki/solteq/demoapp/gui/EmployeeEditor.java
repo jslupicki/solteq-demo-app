@@ -108,6 +108,7 @@ public class EmployeeEditor extends Window {
         Button saveBtn = new Button("Save", event -> {
             employee.setFirstName(firstNameTf.getValue());
             employee.setLastName(lastNameTf.getValue());
+            employee.updateSearchString();
             saveListener.accept(employee, this);
             close();
         });

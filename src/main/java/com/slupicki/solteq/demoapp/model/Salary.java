@@ -1,11 +1,17 @@
 package com.slupicki.solteq.demoapp.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import com.google.common.collect.ImmutableList;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
+
+import static com.slupicki.solteq.demoapp.common.Constants.DATE_FORMATTER;
+import static com.slupicki.solteq.demoapp.common.Constants.SEARCH_STRING_LENGTH;
 
 @Entity
 public class Salary {
@@ -17,6 +23,9 @@ public class Salary {
     private LocalDate fromDate;
     @ManyToOne
     private Employee employee;
+
+    @Column(length = SEARCH_STRING_LENGTH)
+    private String searchString;
 
     public Salary() {
     }
@@ -54,13 +63,29 @@ public class Salary {
         this.employee = employee;
     }
 
+    public String getSearchString() {
+        return searchString;
+    }
+
+    public void setSearchString(String searchString) {
+        this.searchString = searchString;
+    }
+
+    @PreUpdate
+    @PrePersist
+    public void updateSearchString() {
+        final String fullSearchString = StringUtils.join(
+                ImmutableList.of(
+                        DATE_FORMATTER.format(fromDate),
+                        String.valueOf(amount)
+                ),
+                " "
+        );
+        searchString = StringUtils.substring(fullSearchString, 0, SEARCH_STRING_LENGTH - 1);
+    }
+
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Salary{");
-        sb.append("amount=").append(amount);
-        sb.append(", fromDate=").append(fromDate);
-        //sb.append(", employee=").append(employee);
-        sb.append('}');
-        return sb.toString();
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 }

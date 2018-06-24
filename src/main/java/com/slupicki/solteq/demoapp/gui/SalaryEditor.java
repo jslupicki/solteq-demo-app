@@ -58,6 +58,7 @@ public class SalaryEditor extends Window {
             BigDecimal amount = Try.of(() -> (BigDecimal) decimalFormat.parse(amountTf.getValue())).getOrElse(BigDecimal.ZERO);
             salary.setAmount(amount);
             salary.setFromDate(fromDateDf.getValue());
+            salary.updateSearchString();
             saveListener.accept(salary, this);
             close();
         });
