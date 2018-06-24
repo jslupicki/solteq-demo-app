@@ -73,7 +73,7 @@ public class EmployeeEditor extends Window {
         Util.refreshGrid(salaryGrid, employee.getSortedSalaries());
 
         final HorizontalLayout salariesCaption = Util.captionAndAddButton("Salaries", event -> {
-            Salary salary = new Salary(BigDecimal.ZERO, LocalDate.now());
+            Salary salary = new Salary(LocalDate.now(), null, BigDecimal.ZERO);
             editSalary(salary, employee, salaryGrid);
         });
         salaryLayout.addComponentsAndExpand(
@@ -92,7 +92,7 @@ public class EmployeeEditor extends Window {
         Util.refreshGrid(contactInfoGrid, employee.getSortedContactInfos());
 
         final HorizontalLayout contactInfoCaption = Util.captionAndAddButton("Contact info", event -> {
-            ContactInfo contactInfo = new ContactInfo(LocalDate.now(), "");
+            ContactInfo contactInfo = new ContactInfo(LocalDate.now(), null, "");
             editContactInfo(contactInfo, employee, contactInfoGrid);
         });
         contactInfoLayout.addComponentsAndExpand(

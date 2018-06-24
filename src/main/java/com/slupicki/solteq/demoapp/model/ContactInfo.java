@@ -1,6 +1,7 @@
 package com.slupicki.solteq.demoapp.model;
 
 import com.google.common.collect.ImmutableList;
+import io.vavr.control.Try;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -19,6 +20,7 @@ public class ContactInfo {
     private UUID id = UUID.randomUUID();
 
     private LocalDate fromDate;
+    private LocalDate toDate;
     private String phone;
     @ManyToOne
     private Employee employee;
@@ -29,8 +31,9 @@ public class ContactInfo {
     public ContactInfo() {
     }
 
-    public ContactInfo(LocalDate fromDate, String phone) {
+    public ContactInfo(LocalDate fromDate, LocalDate toDate, String phone) {
         this.fromDate = fromDate;
+        this.toDate = toDate;
         this.phone = phone;
     }
 
@@ -44,6 +47,14 @@ public class ContactInfo {
 
     public void setFromDate(LocalDate fromDate) {
         this.fromDate = fromDate;
+    }
+
+    public LocalDate getToDate() {
+        return toDate;
+    }
+
+    public void setToDate(LocalDate toDate) {
+        this.toDate = toDate;
     }
 
     public String getPhone() {
@@ -75,12 +86,13 @@ public class ContactInfo {
     public void updateSearchString() {
         final String fullSearchString = StringUtils.join(
                 ImmutableList.of(
-                        DATE_FORMATTER.format(fromDate),
+                        Try.of(() -> DATE_FORMATTER.format(fromDate)).getOrElse(""),
+                        Try.of(() -> DATE_FORMATTER.format(toDate)).getOrElse(""),
                         phone
                 ),
                 " "
         );
-        searchString = StringUtils.substring(fullSearchString, 0, SEARCH_STRING_LENGTH - 1);
+        searchString = StringUtils.substring(fullSearchString, 0, SEARCH_STRING_LENGTH - 1).toLowerCase();
     }
 
     @Override

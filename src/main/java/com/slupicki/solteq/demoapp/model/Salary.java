@@ -1,6 +1,7 @@
 package com.slupicki.solteq.demoapp.model;
 
 import com.google.common.collect.ImmutableList;
+import io.vavr.control.Try;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -19,8 +20,9 @@ public class Salary {
     @Id
     private UUID id = UUID.randomUUID();
 
-    private BigDecimal amount;
     private LocalDate fromDate;
+    private LocalDate toDate;
+    private BigDecimal amount;
     @ManyToOne
     private Employee employee;
 
@@ -30,21 +32,14 @@ public class Salary {
     public Salary() {
     }
 
-    public Salary(BigDecimal amount, LocalDate fromDate) {
-        this.amount = amount;
+    public Salary(LocalDate fromDate, LocalDate toDate, BigDecimal amount) {
         this.fromDate = fromDate;
+        this.toDate = toDate;
+        this.amount = amount;
     }
 
     public UUID getId() {
         return id;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
     }
 
     public LocalDate getFromDate() {
@@ -53,6 +48,22 @@ public class Salary {
 
     public void setFromDate(LocalDate fromDate) {
         this.fromDate = fromDate;
+    }
+
+    public LocalDate getToDate() {
+        return toDate;
+    }
+
+    public void setToDate(LocalDate toDate) {
+        this.toDate = toDate;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
     }
 
     public Employee getEmployee() {
@@ -76,12 +87,13 @@ public class Salary {
     public void updateSearchString() {
         final String fullSearchString = StringUtils.join(
                 ImmutableList.of(
-                        DATE_FORMATTER.format(fromDate),
+                        Try.of(() -> DATE_FORMATTER.format(fromDate)).getOrElse(""),
+                        Try.of(() -> DATE_FORMATTER.format(toDate)).getOrElse(""),
                         String.valueOf(amount)
                 ),
                 " "
         );
-        searchString = StringUtils.substring(fullSearchString, 0, SEARCH_STRING_LENGTH - 1);
+        searchString = StringUtils.substring(fullSearchString, 0, SEARCH_STRING_LENGTH - 1).toLowerCase();
     }
 
     @Override

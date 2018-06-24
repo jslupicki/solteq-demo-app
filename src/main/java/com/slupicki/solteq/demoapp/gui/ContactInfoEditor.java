@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.function.BiConsumer;
 
+import static com.slupicki.solteq.demoapp.common.Constants.DATE_PATTERN;
+
 public class ContactInfoEditor extends Window {
 
     private static final Logger log = LoggerFactory.getLogger(ContactInfoEditor.class);
@@ -46,12 +48,17 @@ public class ContactInfoEditor extends Window {
         phoneTf.setCaption("Phone");
         phoneTf.setValue(contactInfo.getPhone());
         final DateField fromDateDf = new DateField();
-        fromDateDf.setDateFormat("yyyy-MM-dd");
+        fromDateDf.setDateFormat(DATE_PATTERN);
         fromDateDf.setCaption("From date:");
         fromDateDf.setValue(contactInfo.getFromDate());
+        final DateField toDateDf = new DateField();
+        toDateDf.setDateFormat(DATE_PATTERN);
+        toDateDf.setCaption("To date:");
+        toDateDf.setValue(contactInfo.getToDate());
         Button saveBtn = new Button("Save", event -> {
             contactInfo.setPhone(phoneTf.getValue());
             contactInfo.setFromDate(fromDateDf.getValue());
+            contactInfo.setToDate(toDateDf.getValue());
             contactInfo.updateSearchString();
             saveListener.accept(contactInfo, this);
             close();
@@ -66,6 +73,7 @@ public class ContactInfoEditor extends Window {
         );
         content.addComponent(phoneTf);
         content.addComponent(fromDateDf);
+        content.addComponent(toDateDf);
         content.addComponent(buttonLayout);
         setContent(content);
         setModal(true);

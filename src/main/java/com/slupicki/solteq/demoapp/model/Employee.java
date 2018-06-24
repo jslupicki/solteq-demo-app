@@ -132,7 +132,7 @@ public class Employee {
                 ),
                 " "
         );
-        searchString = StringUtils.substring(fullSearchString, 0, SEARCH_STRING_LENGTH - 1);
+        searchString = StringUtils.substring(fullSearchString, 0, SEARCH_STRING_LENGTH - 1).toLowerCase();
     }
 
     @Override

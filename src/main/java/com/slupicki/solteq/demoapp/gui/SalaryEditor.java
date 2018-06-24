@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.function.BiConsumer;
 
+import static com.slupicki.solteq.demoapp.common.Constants.DATE_PATTERN;
+
 public class SalaryEditor extends Window {
 
     private static final Logger log = LoggerFactory.getLogger(SalaryEditor.class);
@@ -49,15 +51,20 @@ public class SalaryEditor extends Window {
         amountTf.setCaption("Amount");
         amountTf.setValue(Try.of(() -> salary.getAmount().toString()).getOrElse(BigDecimal.ZERO.toString()));
         final DateField fromDateDf = new DateField();
-        fromDateDf.setDateFormat("yyyy-MM-dd");
+        fromDateDf.setDateFormat(DATE_PATTERN);
         fromDateDf.setCaption("From date:");
         fromDateDf.setValue(salary.getFromDate());
+        final DateField toDateDf = new DateField();
+        toDateDf.setDateFormat(DATE_PATTERN);
+        toDateDf.setCaption("To date:");
+        toDateDf.setValue(salary.getToDate());
         Button saveBtn = new Button("Save", event -> {
             DecimalFormat decimalFormat = new DecimalFormat();
             decimalFormat.setParseBigDecimal(true);
             BigDecimal amount = Try.of(() -> (BigDecimal) decimalFormat.parse(amountTf.getValue())).getOrElse(BigDecimal.ZERO);
             salary.setAmount(amount);
             salary.setFromDate(fromDateDf.getValue());
+            salary.setToDate(toDateDf.getValue());
             salary.updateSearchString();
             saveListener.accept(salary, this);
             close();
@@ -72,6 +79,7 @@ public class SalaryEditor extends Window {
         );
         content.addComponent(amountTf);
         content.addComponent(fromDateDf);
+        content.addComponent(toDateDf);
         content.addComponent(buttonLayout);
         setContent(content);
         setModal(true);
