@@ -4,6 +4,8 @@ import com.vaadin.icons.VaadinIcons;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
+import javax.xml.bind.DatatypeConverter;
+import java.security.MessageDigest;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
@@ -55,6 +57,18 @@ public interface Util {
         button.addStyleName(ValoTheme.BUTTON_SMALL);
         button.addClickListener(clickListener);
         return button;
+    }
+
+    static String hashPassword(String password) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            md.update(password.getBytes());
+            byte[] digest = md.digest();
+            String myHash = DatatypeConverter.printHexBinary(digest).toUpperCase();
+            return myHash;
+        } catch (Exception e) {
+            return password;
+        }
     }
 
 }

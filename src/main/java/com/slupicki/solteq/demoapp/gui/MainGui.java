@@ -1,13 +1,14 @@
 package com.slupicki.solteq.demoapp.gui;
 
+import com.slupicki.solteq.demoapp.common.Util;
+import com.slupicki.solteq.demoapp.dao.UserRepository;
+import com.slupicki.solteq.demoapp.model.User;
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.spring.annotation.SpringUI;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.UI;
+import com.vaadin.ui.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +26,17 @@ public class MainGui extends UI {
     private final UsersTab usersTab;
     private final ReportsTab reportsTab;
 
+    private final UserRepository userRepository;
+
+    private User user;
+
     @Autowired
-    public MainGui(EmployeesTab employeesTab, ChartsTab chartsTab, UsersTab usersTab, ReportsTab reportsTab) {
+    public MainGui(EmployeesTab employeesTab, ChartsTab chartsTab, UsersTab usersTab, ReportsTab reportsTab, UserRepository userRepository) {
         this.employeesTab = employeesTab;
         this.chartsTab = chartsTab;
         this.usersTab = usersTab;
         this.reportsTab = reportsTab;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -62,7 +68,29 @@ public class MainGui extends UI {
             }
         });
 
-        setContent(tabSheet);
+        FormLayout loginLayout = new FormLayout();
+        TextField loginTf = new TextField("Login:");
+        PasswordField passwordPf = new PasswordField("Password:");
+        Button loginBtn = new Button("Login", event -> {
+            String login = loginTf.getValue();
+            String password = passwordPf.getValue();
+            log.info("Try to log '{}' with password '{}' hashed password '{}'", login, password, Util.hashPassword(password));
+            User user = userRepository.findByLoginAndPassword(login, Util.hashPassword(password));
+            if (user != null) {
+                this.user = user;
+                setContent(tabSheet);
+            } else {
+                this.user = null;
+                Notification.show("Access denied !", Notification.Type.ERROR_MESSAGE);
+            }
+        });
+        loginLayout.addComponents(
+                loginTf,
+                passwordPf,
+                loginBtn
+        );
+
+        setContent(loginLayout);
     }
 
     @WebServlet(urlPatterns = "/*", name = "EmpleyeeGUIServlet", asyncSupported = true)

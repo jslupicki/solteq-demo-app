@@ -70,8 +70,8 @@ public class EmployeesTab extends VerticalLayout {
     private void editEmployee(Employee e) {
         new EmployeeEditor(e,
                 (employeeToSave, editor) -> {
-                    log.info("Save edit: {}", e);
-                    repository.save(e);
+                    log.info("Save edit: {}", employeeToSave);
+                    repository.save(employeeToSave);
                     refreshGrid();
                 },
                 (employeeCanceled, editor) -> log.info("Cancel edit: {}", employeeCanceled)
