@@ -64,9 +64,11 @@ public class EmployeeEditor extends Window {
 
         final VerticalLayout salaryLayout = new VerticalLayout();
         final Grid<Salary> salaryGrid = new Grid<>();
+        salaryGrid.setWidth(36, Unit.EM);
         salaryGrid.addColumn(salary -> employee.getSortedSalaries().indexOf(salary) + 1).setExpandRatio(0);
         salaryGrid.addColumn(Salary::getAmount).setCaption("Amount").setExpandRatio(1);
         salaryGrid.addColumn(Salary::getFromDate).setCaption("From date").setExpandRatio(2);
+        salaryGrid.addColumn(Salary::getToDate).setCaption("To date").setExpandRatio(2);
         salaryGrid.addComponentColumn(salary -> Util.editButton(event -> editSalary(salary, employee, salaryGrid))).setExpandRatio(0);
         salaryGrid.addComponentColumn(salary -> Util.deleteButton(event -> deleteSalary(salary, employee, salaryGrid))).setExpandRatio(0);
         salaryGrid.setFrozenColumnCount(1);
@@ -83,9 +85,11 @@ public class EmployeeEditor extends Window {
 
         final VerticalLayout contactInfoLayout = new VerticalLayout();
         final Grid<ContactInfo> contactInfoGrid = new Grid<>();
+        contactInfoGrid.setWidth(36, Unit.EM);
         contactInfoGrid.addColumn(contactInfo -> employee.getSortedContactInfos().indexOf(contactInfo) + 1).setExpandRatio(0);
         contactInfoGrid.addColumn(ContactInfo::getPhone).setCaption("Phone").setExpandRatio(1);
         contactInfoGrid.addColumn(ContactInfo::getFromDate).setCaption("From date").setExpandRatio(2);
+        contactInfoGrid.addColumn(ContactInfo::getToDate).setCaption("To date").setExpandRatio(2);
         contactInfoGrid.addComponentColumn(contactInfo -> Util.editButton(event -> editContactInfo(contactInfo, employee, contactInfoGrid))).setExpandRatio(0);
         contactInfoGrid.addComponentColumn(contactInfo -> Util.deleteButton(event -> deleteContactInfo(contactInfo, employee, contactInfoGrid))).setExpandRatio(0);
         contactInfoGrid.setFrozenColumnCount(1);
