@@ -23,12 +23,14 @@ public class MainGui extends UI {
     private final EmployeesTab employeesTab;
     private final ChartsTab chartsTab;
     private final UsersTab usersTab;
+    private final ReportsTab reportsTab;
 
     @Autowired
-    public MainGui(EmployeesTab employeesTab, ChartsTab chartsTab, UsersTab usersTab) {
+    public MainGui(EmployeesTab employeesTab, ChartsTab chartsTab, UsersTab usersTab, ReportsTab reportsTab) {
         this.employeesTab = employeesTab;
         this.chartsTab = chartsTab;
         this.usersTab = usersTab;
+        this.reportsTab = reportsTab;
     }
 
     @Override
@@ -36,6 +38,7 @@ public class MainGui extends UI {
         TabSheet tabSheet = new TabSheet();
         tabSheet.addTab(employeesTab, "Employees");
         tabSheet.addTab(chartsTab, "Charts");
+        tabSheet.addTab(reportsTab, "Reports");
         tabSheet.addTab(usersTab, "Users");
         tabSheet.addSelectedTabChangeListener(event -> {
             TabSheet eventTabSheet = event.getTabSheet();

@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface SalaryRepository extends PagingAndSortingRepository<Salary, UUID> {
+
     List<Salary> findByFromDateIsLessThanEqualAndToDateIsGreaterThan(LocalDate to, LocalDate from);
 
     @Query("select min(s.fromDate) from Salary s")

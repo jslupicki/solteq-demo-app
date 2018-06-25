@@ -1,14 +1,12 @@
 package com.slupicki.solteq.demoapp.common;
 
 import com.vaadin.icons.VaadinIcons;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
+import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -27,11 +25,22 @@ public interface Util {
         final Label label = new Label(caption);
         final Button addBtn = new Button("Add");
         addBtn.addClickListener(clickListener);
-        final HorizontalLayout horizontalLayout = new HorizontalLayout(
+        return new HorizontalLayout(
                 label,
                 addBtn
         );
-        return horizontalLayout;
+    }
+
+    static HorizontalLayout search(Consumer<String> searchListener) {
+        final TextField searchTf = new TextField();
+        final Button searchBtn = new Button("Search");
+        searchBtn.addClickListener(event ->
+            searchListener.accept(searchTf.getValue())
+        );
+        return new HorizontalLayout(
+                searchTf,
+                searchBtn
+        );
     }
 
     static Button editButton(Button.ClickListener clickListener) {

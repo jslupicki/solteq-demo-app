@@ -38,6 +38,12 @@ public class EmployeesTab extends VerticalLayout {
             editEmployee(employee);
         });
 
+        final HorizontalLayout searchLayout = Util.search(s -> {
+            log.info("Search by '{}'",s);
+            employees = repository.findBySearchStringIsLike("%" + s.toLowerCase() + "%");
+            Util.refreshGrid(employeeGrid, employees);
+        });
+
         employeeGrid.addColumn(employee -> employees.indexOf(employee) + 1).setExpandRatio(0);
         employeeGrid.addColumn(Employee::getFirstName).setCaption("First name").setExpandRatio(1);
         employeeGrid.addColumn(Employee::getLastName).setCaption("Last name").setExpandRatio(2);
@@ -53,6 +59,7 @@ public class EmployeesTab extends VerticalLayout {
         refreshGrid(employeeGrid);
 
         addComponent(gridCaptionLayout);
+        addComponent(searchLayout);
         addComponent(employeeGrid);
     }
 
