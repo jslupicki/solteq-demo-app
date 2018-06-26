@@ -25,17 +25,26 @@ public class MainGui extends UI {
     private final ChartsTab chartsTab;
     private final UsersTab usersTab;
     private final ReportsTab reportsTab;
+    private final ExportsTab exportsTab;
 
     private final UserRepository userRepository;
 
     private User user;
 
     @Autowired
-    public MainGui(EmployeesTab employeesTab, ChartsTab chartsTab, UsersTab usersTab, ReportsTab reportsTab, UserRepository userRepository) {
+    public MainGui(
+            EmployeesTab employeesTab,
+            ChartsTab chartsTab,
+            UsersTab usersTab,
+            ReportsTab reportsTab,
+            ExportsTab exportsTab,
+            UserRepository userRepository
+    ) {
         this.employeesTab = employeesTab;
         this.chartsTab = chartsTab;
         this.usersTab = usersTab;
         this.reportsTab = reportsTab;
+        this.exportsTab = exportsTab;
         this.userRepository = userRepository;
     }
 
@@ -45,6 +54,7 @@ public class MainGui extends UI {
         tabSheet.addTab(employeesTab, "Employees");
         tabSheet.addTab(chartsTab, "Charts");
         tabSheet.addTab(reportsTab, "Reports");
+        tabSheet.addTab(exportsTab, "Exports");
         tabSheet.addTab(usersTab, "Users");
         tabSheet.addSelectedTabChangeListener(event -> {
             TabSheet eventTabSheet = event.getTabSheet();
@@ -63,6 +73,9 @@ public class MainGui extends UI {
                     reportsTab.refresh();
                     break;
                 case 3:
+                    exportsTab.refresh();
+                    break;
+                case 4:
                     usersTab.refresh();
                     break;
                 default:
@@ -77,7 +90,7 @@ public class MainGui extends UI {
         Button loginBtn = new Button("Login", event -> {
             String login = loginTf.getValue();
             String password = passwordPf.getValue();
-            log.info("Try to log '{}' with password '{}' hashed password '{}'", login, password, Util.hashPassword(password));
+            log.info("Try to log '{}' with hashed password '{}'", login, Util.hashPassword(password));
             User user = userRepository.findByLoginAndPassword(login, Util.hashPassword(password));
             if (user != null) {
                 this.user = user;

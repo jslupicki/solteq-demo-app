@@ -3,6 +3,7 @@ package com.slupicki.solteq.demoapp.model;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
+import com.opencsv.bean.CsvBindByName;
 import io.vavr.control.Option;
 import io.vavr.control.Try;
 import org.apache.commons.lang3.StringUtils;
@@ -24,7 +25,9 @@ public class Employee {
     @Id
     private UUID id = UUID.randomUUID();
 
+    @CsvBindByName
     private String firstName;
+    @CsvBindByName
     private String lastName;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Salary> salaries = Sets.newHashSet();

@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ReportsTab  extends VerticalLayout {
+public class ReportsTab extends VerticalLayout {
 
     private static final Logger log = LoggerFactory.getLogger(ReportsTab.class);
 
