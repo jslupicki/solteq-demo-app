@@ -1,5 +1,7 @@
 package com.slupicki.solteq.demoapp.common;
 
+import com.slupicki.solteq.demoapp.gui.MainGui;
+import com.slupicki.solteq.demoapp.model.User;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
@@ -24,20 +26,22 @@ public interface Util {
     }
 
     static HorizontalLayout captionAndAddButton(String caption, Button.ClickListener clickListener) {
+        HorizontalLayout result = new HorizontalLayout();
         final Label label = new Label(caption);
-        final Button addBtn = new Button("Add");
-        addBtn.addClickListener(clickListener);
-        return new HorizontalLayout(
-                label,
-                addBtn
-        );
+        result.addComponent(label);
+        if (User.Access.ADMIN.equals(Util.currentUserAccess())) {
+            final Button addBtn = new Button("Add");
+            addBtn.addClickListener(clickListener);
+            result.addComponent(addBtn);
+        }
+        return result;
     }
 
     static HorizontalLayout search(Consumer<String> searchListener) {
         final TextField searchTf = new TextField();
         final Button searchBtn = new Button("Search");
         searchBtn.addClickListener(event ->
-            searchListener.accept(searchTf.getValue())
+                searchListener.accept(searchTf.getValue())
         );
         return new HorizontalLayout(
                 searchTf,
@@ -71,4 +75,22 @@ public interface Util {
         }
     }
 
+    static User currentUser() {
+        return ((MainGui) UI.getCurrent()).getUser();
+    }
+
+    static User.Access currentUserAccess() {
+        if (currentUser() != null) {
+            return currentUser().getAccess();
+        }
+        return User.Access.NONE;
+    }
+
+    static Component userBar() {
+        String login = currentUser() != null ? currentUser().getLogin() : "";
+        User.Access access = currentUserAccess();
+        return new Label(
+                String.format("User: %s, Access: %s", login, access.name())
+        );
+    }
 }

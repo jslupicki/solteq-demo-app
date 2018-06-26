@@ -55,7 +55,8 @@ public class User {
 
     public enum Access {
         ADMIN,
-        REGULAR
+        REGULAR,
+        NONE
     }
 
     @Override

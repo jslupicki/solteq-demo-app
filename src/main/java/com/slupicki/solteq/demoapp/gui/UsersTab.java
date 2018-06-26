@@ -28,6 +28,12 @@ public class UsersTab extends VerticalLayout {
         this.repository = userRepository;
         users = Util.iterableToList(repository.findAll());
 
+    }
+
+    public void refresh() {
+        removeAllComponents();
+        userGrid.removeAllColumns();
+
         final HorizontalLayout gridCaptionLayout = Util.captionAndAddButton("Users", e -> {
             User user = new User("", "", User.Access.REGULAR);
             editUser(user);
@@ -36,18 +42,16 @@ public class UsersTab extends VerticalLayout {
         userGrid.addColumn(user -> users.indexOf(user) + 1).setExpandRatio(0);
         userGrid.addColumn(User::getLogin).setCaption("Login").setExpandRatio(1);
         userGrid.addColumn(User::getAccess).setCaption("Access").setExpandRatio(2);
-        userGrid.addComponentColumn(user -> Util.editButton(event -> editUser(user))).setExpandRatio(0);
-        userGrid.addComponentColumn(user -> Util.deleteButton(event -> deleteUser(user))).setExpandRatio(0);
+        if (User.Access.ADMIN.equals(Util.currentUserAccess())) {
+            userGrid.addComponentColumn(user -> Util.editButton(event -> editUser(user))).setExpandRatio(0);
+            userGrid.addComponentColumn(user -> Util.deleteButton(event -> deleteUser(user))).setExpandRatio(0);
+        }
         userGrid.setFrozenColumnCount(1);
 
         refreshGrid(userGrid);
 
         addComponent(gridCaptionLayout);
         addComponent(userGrid);
-    }
-
-    public void refresh() {
-        refreshGrid();
     }
 
     private void editUser(User u) {

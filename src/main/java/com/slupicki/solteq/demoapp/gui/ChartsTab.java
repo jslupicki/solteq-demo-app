@@ -62,7 +62,7 @@ public class ChartsTab extends VerticalLayout {
     }
 
     private SalariesPerMonthChart getChart(LocalDate fromDate, LocalDate toDate) {
-        String Title = "Salaries per month";
+        String Title = "Average salary per month";
         String xTtitle = "Month";
         String yTitle = "$";
         String subTitle = String.format("from %s to %s", DATE_FORMATTER.format(fromDate), DATE_FORMATTER.format(toDate));
@@ -75,7 +75,7 @@ public class ChartsTab extends VerticalLayout {
         SalariesPerMonthChart chart = new SalariesPerMonthChart(Title, subTitle);
 
         // Add headers
-        chart.addHeaders(List.of(xTtitle, "Salaries").asJava());
+        chart.addHeaders(List.of(xTtitle, "Average salary").asJava());
 
         // add data
         months.zip(salaries).forEach(tuple ->

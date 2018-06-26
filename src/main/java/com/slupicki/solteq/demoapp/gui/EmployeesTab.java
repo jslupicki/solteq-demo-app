@@ -4,6 +4,7 @@ import com.slupicki.solteq.demoapp.common.Util;
 import com.slupicki.solteq.demoapp.dao.EmplyeeRepository;
 import com.slupicki.solteq.demoapp.model.Employee;
 import com.slupicki.solteq.demoapp.model.Salary;
+import com.slupicki.solteq.demoapp.model.User;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
@@ -29,6 +30,11 @@ public class EmployeesTab extends VerticalLayout {
         super();
         this.repository = repository;
         employees = Util.iterableToList(repository.findAll());
+    }
+
+    public void refresh() {
+        removeAllComponents();
+        employeeGrid.removeAllColumns();
 
         final HorizontalLayout gridCaptionLayout = Util.captionAndAddButton("Employees", e -> {
             Employee employee = new Employee(
@@ -52,8 +58,10 @@ public class EmployeesTab extends VerticalLayout {
                         .map(Salary::getAmount)
                         .getOrElse(BigDecimal.ZERO)
         ).setCaption("Salary").setExpandRatio(2);
-        employeeGrid.addComponentColumn(employee -> Util.editButton(event -> editEmployee(employee))).setExpandRatio(0);
-        employeeGrid.addComponentColumn(employee -> Util.deleteButton(event -> deleteEmployee(employee))).setExpandRatio(0);
+        if (User.Access.ADMIN.equals(Util.currentUserAccess())) {
+            employeeGrid.addComponentColumn(employee -> Util.editButton(event -> editEmployee(employee))).setExpandRatio(0);
+            employeeGrid.addComponentColumn(employee -> Util.deleteButton(event -> deleteEmployee(employee))).setExpandRatio(0);
+        }
         employeeGrid.setFrozenColumnCount(1);
 
         refreshGrid(employeeGrid);
@@ -61,10 +69,6 @@ public class EmployeesTab extends VerticalLayout {
         addComponent(gridCaptionLayout);
         addComponent(searchLayout);
         addComponent(employeeGrid);
-    }
-
-    public void refresh() {
-        refreshGrid();
     }
 
     private void editEmployee(Employee e) {

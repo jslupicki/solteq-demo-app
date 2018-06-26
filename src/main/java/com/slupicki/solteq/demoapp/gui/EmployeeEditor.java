@@ -4,6 +4,7 @@ import com.slupicki.solteq.demoapp.common.Util;
 import com.slupicki.solteq.demoapp.model.ContactInfo;
 import com.slupicki.solteq.demoapp.model.Employee;
 import com.slupicki.solteq.demoapp.model.Salary;
+import com.slupicki.solteq.demoapp.model.User;
 import com.vaadin.ui.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,8 +91,10 @@ public class EmployeeEditor extends Window {
         contactInfoGrid.addColumn(ContactInfo::getPhone).setCaption("Phone").setExpandRatio(1);
         contactInfoGrid.addColumn(ContactInfo::getFromDate).setCaption("From date").setExpandRatio(2);
         contactInfoGrid.addColumn(ContactInfo::getToDate).setCaption("To date").setExpandRatio(2);
-        contactInfoGrid.addComponentColumn(contactInfo -> Util.editButton(event -> editContactInfo(contactInfo, employee, contactInfoGrid))).setExpandRatio(0);
-        contactInfoGrid.addComponentColumn(contactInfo -> Util.deleteButton(event -> deleteContactInfo(contactInfo, employee, contactInfoGrid))).setExpandRatio(0);
+        if (User.Access.ADMIN.equals(Util.currentUserAccess())) {
+            contactInfoGrid.addComponentColumn(contactInfo -> Util.editButton(event -> editContactInfo(contactInfo, employee, contactInfoGrid))).setExpandRatio(0);
+            contactInfoGrid.addComponentColumn(contactInfo -> Util.deleteButton(event -> deleteContactInfo(contactInfo, employee, contactInfoGrid))).setExpandRatio(0);
+        }
         contactInfoGrid.setFrozenColumnCount(1);
         Util.refreshGrid(contactInfoGrid, employee.getSortedContactInfos());
 

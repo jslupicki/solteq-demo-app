@@ -60,6 +60,9 @@ public class MainGui extends UI {
                     chartsTab.refresh();
                     break;
                 case 2:
+                    reportsTab.refresh();
+                    break;
+                case 3:
                     usersTab.refresh();
                     break;
                 default:
@@ -78,7 +81,13 @@ public class MainGui extends UI {
             User user = userRepository.findByLoginAndPassword(login, Util.hashPassword(password));
             if (user != null) {
                 this.user = user;
-                setContent(tabSheet);
+                setContent(
+                        new VerticalLayout(
+                                Util.userBar(),
+                                tabSheet
+                        )
+                );
+                employeesTab.refresh();
             } else {
                 this.user = null;
                 Notification.show("Access denied !", Notification.Type.ERROR_MESSAGE);
@@ -91,6 +100,10 @@ public class MainGui extends UI {
         );
 
         setContent(loginLayout);
+    }
+
+    public User getUser() {
+        return user;
     }
 
     @WebServlet(urlPatterns = "/*", name = "EmpleyeeGUIServlet", asyncSupported = true)
