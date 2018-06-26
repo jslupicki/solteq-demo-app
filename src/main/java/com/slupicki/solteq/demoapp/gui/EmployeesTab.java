@@ -50,6 +50,7 @@ public class EmployeesTab extends VerticalLayout {
             Util.refreshGrid(employeeGrid, employees);
         });
 
+        employeeGrid.setWidth(40, Unit.EM);
         employeeGrid.addColumn(employee -> employees.indexOf(employee) + 1).setExpandRatio(0);
         employeeGrid.addColumn(Employee::getFirstName).setCaption("First name").setExpandRatio(1);
         employeeGrid.addColumn(Employee::getLastName).setCaption("Last name").setExpandRatio(2);

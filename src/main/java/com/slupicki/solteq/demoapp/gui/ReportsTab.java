@@ -13,10 +13,12 @@ public class ReportsTab extends VerticalLayout {
 
     public ReportsTab() {
         super();
-        addComponent(new Label("Reports - work in progress"));
+        refresh();
     }
 
     public void refresh() {
         log.info("Refresh {}", this.getClass().getSimpleName());
+        removeAllComponents();
+        addComponent(new Label("Reports - work in progress"));
     }
 }

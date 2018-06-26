@@ -30,16 +30,17 @@ public class ExportsTab extends VerticalLayout {
         removeAllComponents();
 
         Button employeeCsvDownload = new Button("Download");
-        StreamResource myResource = createResource();
-        FileDownloader fileDownloader = new FileDownloader(myResource);
+        StreamResource employeesCsvResource = employeesCsvResource();
+        FileDownloader fileDownloader = new FileDownloader(employeesCsvResource);
         fileDownloader.extend(employeeCsvDownload);
+
         addComponent(new HorizontalLayout(
                 new Label("Employees in CSV"),
                 employeeCsvDownload
         ));
     }
 
-    private StreamResource createResource() {
+    private StreamResource employeesCsvResource() {
         return new StreamResource(
                 (StreamResource.StreamSource) () -> Try.of(() -> employeeCsvExport.generate()).getOrNull(),
                 "employees.csv"

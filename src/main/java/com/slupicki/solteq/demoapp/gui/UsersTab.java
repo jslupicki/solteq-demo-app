@@ -27,7 +27,6 @@ public class UsersTab extends VerticalLayout {
         super();
         this.repository = userRepository;
         users = Util.iterableToList(repository.findAll());
-
     }
 
     public void refresh() {

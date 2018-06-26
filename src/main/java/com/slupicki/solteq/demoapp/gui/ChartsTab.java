@@ -17,6 +17,7 @@ import java.time.LocalDate;
 
 import static com.slupicki.solteq.demoapp.common.Constants.DATE_FORMATTER;
 import static com.slupicki.solteq.demoapp.common.Constants.DATE_PATTERN;
+import static java.math.MathContext.DECIMAL32;
 
 @Component
 public class ChartsTab extends VerticalLayout {
@@ -30,6 +31,13 @@ public class ChartsTab extends VerticalLayout {
     public ChartsTab(SalaryRepository salaryRepository) {
         super();
         this.salaryRepository = salaryRepository;
+        refresh();
+    }
+
+    public void refresh() {
+        log.info("Refresh {}", this.getClass().getSimpleName());
+        removeAllComponents();
+
         LocalDate firstDate = salaryRepository.findFirstDate();
         LocalDate latestDate = salaryRepository.findLatestDate();
 
@@ -53,10 +61,6 @@ public class ChartsTab extends VerticalLayout {
         });
         horizontalLayout.addComponent(drawButton);
         addComponent(horizontalLayout);
-    }
-
-    public void refresh() {
-        log.info("Refresh {}", this.getClass().getSimpleName());
         if (chart != null)
             chart.drawChart();
     }
@@ -100,8 +104,9 @@ public class ChartsTab extends VerticalLayout {
             List<Salary> salariesOfMonth = List.ofAll(salaryRepository.findByFromDateIsLessThanEqualAndToDateIsGreaterThan(endDate, startDate));
             log.info("Find {} salaries", salariesOfMonth.size());
             BigDecimal sum = salariesOfMonth.map(Salary::getAmount).fold(BigDecimal.ZERO, BigDecimal::add);
-            BigDecimal average = salariesOfMonth.size() > 0 ? sum.divide(BigDecimal.valueOf(salariesOfMonth.size())) : BigDecimal.ZERO;
-            log.info("sum: {}, average: {}", sum, average);
+            log.info("sum: {}", sum);
+            BigDecimal average = salariesOfMonth.size() > 0 ? sum.divide(BigDecimal.valueOf(salariesOfMonth.size()), DECIMAL32) : BigDecimal.ZERO;
+            log.info("average: {}", sum, average);
             salaries = salaries.append(average.toString());
             startDate = startDate.plusMonths(1);
         }
