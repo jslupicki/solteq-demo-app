@@ -6,6 +6,13 @@ This is demo app for SOLTEQ.
 
 `mvnw clean install` and then `java -jar target/demo-app-0.0.1-SNAPSHOT.jar`
 
+# Known problems
+
+After logout / login sometimes application will goes to state where is unusable (partially working UI and so).
+It is caused by shared UI components between sessions - for lack of time I don't find which component 
+causes this problem. For now solution is to just restart application.  
+[Discussion on Stack Overflow about this](https://stackoverflow.com/questions/23881573/vaadin-a-connector-with-id-xy-is-already-registered)
+
 # Used tools
 
 * [Spring](https://spring.io/) and [Spring Boot](https://start.spring.io) to manage application, dependency incjection, DAO, web server and more
