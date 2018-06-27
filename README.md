@@ -8,11 +8,12 @@ This is demo app for SOLTEQ.
 
 # Used tools
 
-* Spring and Spring Boot to manage application, dependency incjection, DAO, web server and more
-* Vaadin for UI - I'm "backend guy" so I prefer Java framework.
-* Google Chart for generating charts
-* OpenCSV for generating CSV export 
-* Vavr for a bit functional programming :-) 
+* [Spring](https://spring.io/) and [Spring Boot](https://start.spring.io) to manage application, dependency incjection, DAO, web server and more
+* [H2](http://www.h2database.com/html/main.html) as database 
+* [Vaadin](https://vaadin.com) for UI - I'm "backend guy" so I prefer Java framework.
+* [Google Chart](https://developers.google.com/chart) for generating charts
+* [OpenCSV](http://opencsv.sourceforge.net) for generating CSV export 
+* [Vavr](http://www.vavr.io) for a bit functional programming :-) 
 
 ## Usage:
 
