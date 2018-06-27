@@ -62,25 +62,34 @@ public class MainGui extends UI {
             TabSheet.Tab tab = eventTabSheet.getTab(selectedTab);
             int tabPosition = eventTabSheet.getTabPosition(tab);
             log.info("Selected {} tab", tab.getCaption());
-            switch (tabPosition) {
-                case 0:
-                    employeesTab.refresh();
-                    break;
-                case 1:
-                    chartsTab.refresh();
-                    break;
-                case 2:
-                    reportsTab.refresh();
-                    break;
-                case 3:
-                    exportsTab.refresh();
-                    break;
-                case 4:
-                    usersTab.refresh();
-                    break;
-                default:
-                    log.error("Unknown tab: {}", tab.getCaption());
-                    break;
+            try {
+                switch (tabPosition) {
+                    case 0:
+                        employeesTab.refresh();
+                        break;
+                    case 1:
+                        chartsTab.refresh();
+                        break;
+                    case 2:
+                        reportsTab.refresh();
+                        break;
+                    case 3:
+                        exportsTab.refresh();
+                        break;
+                    case 4:
+                        usersTab.refresh();
+                        break;
+                    default:
+                        log.error("Unknown tab: {}", tab.getCaption());
+                        break;
+                }
+            } catch (Exception e) {
+                // Temporary fix (I hope) for Caused by: java.lang.RuntimeException: A connector with id XX is already registered!
+                //    at com.vaadin.ui.ConnectorTracker.registerConnector(ConnectorTracker.java:133)
+                // TODO: Find and fix root of the problem
+                log.error("Exception when refreshing tab '{}' :", tab.getCaption(), e);
+                getUI().getConnectorTracker().markAllConnectorsDirty();
+                getPage().reload();
             }
         });
 
