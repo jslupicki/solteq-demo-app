@@ -8,15 +8,6 @@ This is demo app for SOLTEQ.
 Docker image will be build by `mvnw deploy` and can be run by `docker-compose up`
 (it need Docker to be installed and running Docker daemon).
 
-# Known problems
-
-_This problem is probably fixed but need more extended tests as it appeared sporadically_ 
-
-After logout / login sometimes application will goes to state where is unusable (partially working UI and so).
-It is caused by shared UI components between sessions - for lack of time I don't find which component 
-causes this problem. For now solution is to just restart application.  
-[Discussion on Stack Overflow about this](https://stackoverflow.com/questions/23881573/vaadin-a-connector-with-id-xy-is-already-registered)
-
 # Used tools
 
 * [Spring](https://spring.io/) and [Spring Boot](https://start.spring.io) to manage application, dependency incjection, DAO, web server and more
