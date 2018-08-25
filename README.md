@@ -2,9 +2,11 @@
 
 This is demo app for SOLTEQ.
 
-# How to start
+# How to build and start
 
 `mvnw clean install` and then `java -jar target/demo-app-0.0.1-SNAPSHOT.jar`
+Docker image will be build by `mvnw deploy` and can be run by `docker-compose up`
+(it need Docker to be installed and running Docker daemon).
 
 # Known problems
 
