@@ -10,6 +10,8 @@ import io.vavr.collection.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -20,6 +22,7 @@ import static com.slupicki.solteq.demoapp.common.Constants.DATE_PATTERN;
 import static java.math.MathContext.DECIMAL32;
 
 @Component
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class ChartsTab extends VerticalLayout {
 
     private static final Logger log = LoggerFactory.getLogger(ChartsTab.class);

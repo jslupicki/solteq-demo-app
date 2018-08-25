@@ -5,6 +5,7 @@ import com.slupicki.solteq.demoapp.dao.UserRepository;
 import com.slupicki.solteq.demoapp.model.User;
 import com.vaadin.annotations.Push;
 import com.vaadin.annotations.VaadinServletConfiguration;
+import com.vaadin.server.ClientConnector;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.spring.annotation.SpringUI;
@@ -12,11 +13,14 @@ import com.vaadin.ui.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
 
 import javax.servlet.annotation.WebServlet;
 
 @SpringUI
 @Push
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class MainGui extends UI {
 
     private static final Logger log = LoggerFactory.getLogger(MainGui.class);
@@ -122,6 +126,28 @@ public class MainGui extends UI {
         );
 
         setContent(loginLayout);
+    }
+    private ConnectorTracker tracker;
+
+    @Override
+    public ConnectorTracker getConnectorTracker() {
+        if (this.tracker == null) {
+            this.tracker =  new ConnectorTracker(this) {
+
+                @Override
+                public void registerConnector(ClientConnector connector) {
+                    try {
+                        super.registerConnector(connector);
+                    } catch (RuntimeException e) {
+                        log.warn("Failed connector: {0}", connector.getClass().getSimpleName());
+                        throw e;
+                    }
+                }
+
+            };
+        }
+
+        return tracker;
     }
 
     public User getUser() {

@@ -10,6 +10,8 @@ Docker image will be build by `mvnw deploy` and can be run by `docker-compose up
 
 # Known problems
 
+_This problem is probably fixed but need more extended tests as it appeared sporadically_ 
+
 After logout / login sometimes application will goes to state where is unusable (partially working UI and so).
 It is caused by shared UI components between sessions - for lack of time I don't find which component 
 causes this problem. For now solution is to just restart application.  

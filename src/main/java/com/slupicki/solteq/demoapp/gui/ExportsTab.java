@@ -11,18 +11,22 @@ import io.vavr.control.Try;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class ExportsTab extends VerticalLayout {
 
     private static final Logger log = LoggerFactory.getLogger(ReportsTab.class);
 
-    @Autowired
-    private EmployeeCsvExport employeeCsvExport;
+    private final EmployeeCsvExport employeeCsvExport;
 
-    public ExportsTab() {
+    @Autowired
+    public ExportsTab(EmployeeCsvExport employeeCsvExport) {
         super();
+        this.employeeCsvExport = employeeCsvExport;
         refresh();
     }
 
@@ -42,7 +46,7 @@ public class ExportsTab extends VerticalLayout {
 
     private StreamResource employeesCsvResource() {
         return new StreamResource(
-                (StreamResource.StreamSource) () -> Try.of(() -> employeeCsvExport.generate()).getOrNull(),
+                (StreamResource.StreamSource) () -> Try.of(employeeCsvExport::generate).getOrNull(),
                 "employees.csv"
         );
     }
