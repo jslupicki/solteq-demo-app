@@ -2,6 +2,6 @@ version: '3'
 
 services:
   demo-app:
-    image: jslupicki/solteq-demo-app:0.0.1-SNAPSHOT
+    image: jslupicki/solteq-demo-app-java:0.0.1-SNAPSHOT
     ports:
      - "8080:8080"

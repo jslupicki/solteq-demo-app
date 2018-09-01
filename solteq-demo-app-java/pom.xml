@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.slupicki.solteq</groupId>
-    <artifactId>demo-app</artifactId>
+    <artifactId>solteq-demo-app-java</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>demo-app</name>
+    <name>solteq-demo-app-java</name>
     <description>Demo application for SOLTEQ</description>
 
     <parent>
@@ -152,7 +152,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <repository>jslupicki/solteq-demo-app</repository>
+                    <repository>jslupicki/solteq-demo-app-java</repository>
                     <tag>${project.version}</tag>
                     <buildArgs>
                         <JAR_FILE>${project.build.finalName}.jar</JAR_FILE>
