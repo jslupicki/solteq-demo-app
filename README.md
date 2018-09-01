@@ -95,7 +95,23 @@ When you click `Draw` chart will be drawn below:
 
 ### Reports
 
-Work in progress ...
+Currently there is only report of employees in PDF or HTML. By clicking _Download *_ you 
+download employeesReport.pdf or employeesReport.html:
+
+![](images/reports_tab.png)
+
+Example of PDF report:
+
+![](images/employee_report_pdf.png)
+
+Example of HTML report:
+
+![](images/employee_report_html.png)
+
+Known problems:
+* PDF - no Polish letters
+* HTML - no images (should be cherry in right upper corner like in PDF version)
+
 
 ### Exports
 

@@ -1,2 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<beanDataAdapter class="net.sf.jasperreports.data.bean.BeanDataAdapterImpl"><name>EmployeesDataAdapter</name><factoryClass>com.slupicki.solteq.demoapp.reports.EmployeeFactory</factoryClass><methodName>getEmployees</methodName><useFieldDescription>true</useFieldDescription></beanDataAdapter>
+<beanDataAdapter class="net.sf.jasperreports.data.bean.BeanDataAdapterImpl">
+    <name>EmployeesDataAdapter</name>
+    <factoryClass>com.slupicki.solteq.demoapp.reports.EmployeeFactory</factoryClass>
+    <methodName>getEmployees</methodName>
+    <useFieldDescription>true</useFieldDescription>
+</beanDataAdapter>

@@ -31,6 +31,7 @@ public class ExportsTab extends VerticalLayout {
     }
 
     public void refresh() {
+        log.info("Refresh {}", this.getClass().getSimpleName());
         removeAllComponents();
 
         Button employeeCsvDownload = new Button("Download");
