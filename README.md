@@ -1,6 +1,8 @@
 # solteq-demo-app
 
-This is demo app for SOLTEQ.
+This is demo app for SOLTEQ as part of recruitment process.
+Task was described in [this document](documentation/SolteqAssignment.pdf)
+
 
 # How to build and start
 
