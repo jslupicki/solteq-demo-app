@@ -19,6 +19,7 @@
     </parent>
 
     <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
@@ -147,7 +148,9 @@
                         <phase>deploy</phase>
                         <goals>
                             <goal>build</goal>
+<!-- For now no repository to push
                             <goal>push</goal>
+-->                            
                         </goals>
                     </execution>
                 </executions>
