@@ -1,8 +1,8 @@
 spring:
-  datasource.url: jdbc:h2:~/solteq-demo-db
+  datasource.url: jdbc:h2:~/solteq-demo-java-db
   jpa.hibernate.ddl-auto: update
   jpa.properties.hibernate:
-    show_sql: true
+    show_sql: false
     use_sql_comments: true
     format_sql: true
 
@@ -10,4 +10,9 @@ logging:
   level:
     org:
       hibernate:
-        type: trace
+        type: info
+    com:
+      slupicki: debug
+    net:
+      sf:
+        jasperreports: debug

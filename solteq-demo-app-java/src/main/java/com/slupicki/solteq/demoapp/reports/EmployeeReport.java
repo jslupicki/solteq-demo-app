@@ -11,6 +11,8 @@ import net.sf.jasperreports.engine.export.JRPdfExporter;
 import net.sf.jasperreports.export.SimpleExporterInput;
 import net.sf.jasperreports.export.SimpleHtmlExporterOutput;
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +28,8 @@ import java.util.stream.StreamSupport;
 
 @Component
 public class EmployeeReport {
+
+    private static final Logger log = LoggerFactory.getLogger(EmployeeReport.class);
 
     private final EmplyeeRepository emplyeeRepository;
     private JasperReport jasperReport;
@@ -55,23 +59,29 @@ public class EmployeeReport {
     }
 
     public InputStream printPDF() throws JRException {
+        log.info("Start generating PDF report");
         JasperPrint jasperPrint = printReport();
         JRPdfExporter pdfExporter = new JRPdfExporter();
         pdfExporter.setExporterInput(new SimpleExporterInput(jasperPrint));
         ByteArrayOutputStream pdfReportStream = new ByteArrayOutputStream();
         pdfExporter.setExporterOutput(new SimpleOutputStreamExporterOutput(pdfReportStream));
         pdfExporter.exportReport();
-        return new ByteArrayInputStream(pdfReportStream.toByteArray());
+        byte[] pdfReport = pdfReportStream.toByteArray();
+        log.info("Generated {} bytes of PDF report", pdfReport.length);
+        return new ByteArrayInputStream(pdfReport);
     }
 
     public InputStream printHTML() throws JRException {
+        log.info("Start generating HTML report");
         JasperPrint jasperPrint = printReport();
         HtmlExporter htmlExporter = new HtmlExporter();
         htmlExporter.setExporterInput(new SimpleExporterInput(jasperPrint));
         ByteArrayOutputStream htmlReportStream = new ByteArrayOutputStream();
         htmlExporter.setExporterOutput(new SimpleHtmlExporterOutput(htmlReportStream));
         htmlExporter.exportReport();
-        return new ByteArrayInputStream(htmlReportStream.toByteArray());
+        byte[] htmlReport = htmlReportStream.toByteArray();
+        log.info("Generated {} bytes of HTML report", htmlReport.length);
+        return new ByteArrayInputStream(htmlReport);
     }
 
     public class EmployeeWrapper {

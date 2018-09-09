@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fontFamilies>
+    <!-- the font-name used within the jasper report -->
+    <fontFamily name="EmbeddedTimesNewRoman">
+        <!-- the actual font files within the jar -->
+        <normal>fonts/times.ttf</normal>
+        <bold>fonts/timesbd.ttf</bold>
+        <italic>fonts/timesi.ttf</italic>
+        <boldItalic>fonts/timesbi.ttf</boldItalic>
+        <!-- make jasper embed the font -->
+        <pdfEmbedded>true</pdfEmbedded>
+    </fontFamily>
+    <fontFamily name="EmbeddedVerdana">
+        <!-- the actual font files within the jar -->
+        <normal>fonts/verdana.ttf</normal>
+        <bold>fonts/verdanab.ttf</bold>
+        <italic>fonts/verdanai.ttf</italic>
+        <boldItalic>fonts/verdanaz.ttf</boldItalic>
+        <!-- make jasper embed the font -->
+        <pdfEmbedded>true</pdfEmbedded>
+    </fontFamily>
+</fontFamilies>
