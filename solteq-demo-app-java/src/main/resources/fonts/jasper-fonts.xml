@@ -19,4 +19,13 @@
         <!-- make jasper embed the font -->
         <pdfEmbedded>true</pdfEmbedded>
     </fontFamily>
+    <fontFamily name="EmbeddedComic">
+        <!-- the actual font files within the jar -->
+        <normal>fonts/comic.ttf</normal>
+        <bold>fonts/comicbd.ttf</bold>
+        <italic>fonts/comici.ttf</italic>
+        <boldItalic>fonts/comicz.ttf</boldItalic>
+        <!-- make jasper embed the font -->
+        <pdfEmbedded>true</pdfEmbedded>
+    </fontFamily>
 </fontFamilies>

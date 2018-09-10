@@ -14,10 +14,13 @@ import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -32,16 +35,19 @@ public class EmployeeReport {
     private static final Logger log = LoggerFactory.getLogger(EmployeeReport.class);
 
     private final EmplyeeRepository emplyeeRepository;
+    private final ApplicationContext context;
     private JasperReport jasperReport;
 
     @Autowired
-    public EmployeeReport(EmplyeeRepository emplyeeRepository) throws JRException {
+    public EmployeeReport(EmplyeeRepository emplyeeRepository, ApplicationContext context) throws JRException, IOException {
         this.emplyeeRepository = emplyeeRepository;
+        this.context = context;
         prepareReport();
     }
 
-    private void prepareReport() throws JRException {
-        InputStream employeeReportStream = getClass().getResourceAsStream("/Employees.jrxml");
+    private void prepareReport() throws JRException, IOException {
+        Resource resource = context.getResource("classpath:Employees.jrxml");
+        InputStream employeeReportStream = resource.getInputStream();
         jasperReport = JasperCompileManager.compileReport(employeeReportStream);
     }
 
